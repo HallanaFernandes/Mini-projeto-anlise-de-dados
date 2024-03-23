@@ -268,3 +268,12 @@ SET nome_completo = CASE
                 ELSE email
             END
 WHERE id_cliente IN (21, 31, 35);
+
+
+INSERT INTO PEDIDO (id_pedido, total, id_cliente, data_pedido, status)
+VALUES 
+    (34, 35, 34, '2023-05-11', 'enviado'),
+    (34, 25, 34, '2023-11-07', 'enviado'),
+    (34, 20, 35, '2023-12-28', 'enviado'),
+    (35, 110, 35, '2023-12-29', 'enviado'),
+    (35, 150, 35, '2023-12-09', 'enviado');

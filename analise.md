@@ -49,48 +49,14 @@ limit 10;
 ou seja o que efetuou maior quantidade de pedidos
 
 ```sql
-SELECT clientes.ID_cliente, clientes.nome_completo, SUM(ITENS_PEDIDO.QTD) AS total_comprado
+SELECT clientes.ID_cliente, clientes.nome_completo, SUM(ITENS_PEDIDO.QTD) AS total_de_pedido
 FROM clientes
 JOIN PEDIDO ON clientes.ID_cliente = PEDIDO.ID_cliente
 JOIN ITENS_PEDIDO ON PEDIDO.ID_pedido = ITENS_PEDIDO.ID_pedido
 GROUP BY clientes.ID_cliente
-ORDER BY total_comprado DESC
+ORDER BY total_de_pedido DESC
 LIMIT 8;
 
-```
-***usando subquery***
-
-```sql
-SELECT 
-    clientes.ID_cliente, 
-    clientes.nome_completo, 
-    (
-        SELECT SUM(ITENS_PEDIDO.QTD) 
-        FROM ITENS_PEDIDO 
-        JOIN PEDIDO ON PEDIDO.ID_pedido = ITENS_PEDIDO.ID_pedido 
-        WHERE PEDIDO.ID_cliente = clientes.ID_cliente
-    ) AS total_comprado
-FROM clientes 
-ORDER BY total_comprado DESC
-LIMIT 10;
-```
-
-***usando partition by***
-
-```sql
-SELECT 
-    clientes.ID_cliente, 
-    clientes.nome_completo,
-    SUM(ITENS_PEDIDO.QTD) OVER (PARTITION BY clientes.ID_cliente) AS total_comprado
-FROM 
-    clientes
-JOIN 
-    PEDIDO ON clientes.ID_cliente = PEDIDO.ID_cliente
-JOIN 
-    ITENS_PEDIDO ON PEDIDO.ID_pedido = ITENS_PEDIDO.ID_pedido
-ORDER BY 
-    total_comprado DESC
-LIMIT 10;
 ```
 **análisar o cliente que fez o pedido mais alto**
 
@@ -110,7 +76,7 @@ JOIN
     Produtos ON ITENS_PEDIDO.id_produto = Produtos.id_produto
 ORDER BY 
 	total_pedido DESC 
-LIMIT 1;
+LIMIT 3;
 ```
 **análisar o cliente que fez o pedido mais baixo**
 
@@ -131,67 +97,50 @@ JOIN
     Produtos ON ITENS_PEDIDO.id_produto = Produtos.id_produto
 ORDER BY 
 	total_pedido 
-LIMIT 1;
+LIMIT 3;
 
 ```
 
-**análisando a média de pedido por cliente**
+**análisando o valor médio de pedido**
 
 ```sql
-	
 SELECT 
-    clientes.id_cliente,
+    clientes.ID_cliente, 
     clientes.nome_completo,
-    Produtos.nome_produto,
-    AVG(PEDIDO.total) OVER (PARTITION BY clientes.id_cliente) AS total_pedido
+    AVG(ITENS_PEDIDO.QTD) AS valor_medio_de_pedido
 FROM 
-    clientes 
-JOIN 
-    PEDIDO ON clientes.id_cliente = PEDIDO.id_cliente 
-JOIN 
-    ITENS_PEDIDO  ON PEDIDO.id_pedido = ITENS_PEDIDO.id_pedido 
-JOIN 
-    Produtos ON ITENS_PEDIDO.id_produto = Produtos.id_produto
-ORDER BY 
-	total_pedido;
-```
-**Estado que teve mais pedidos**
-
-esta errado
-
-```sql
-SELECT 
-    endereco.estado,
-    SUM(ITENS_PEDIDO.QTD) OVER (PARTITION BY clientes.ID_cliente) AS total_comprado
-FROM 
-    endereco 
-join
-	clientes on endereco.id_cliente = clientes.id_cliente 
+    clientes
 JOIN 
     PEDIDO ON clientes.ID_cliente = PEDIDO.ID_cliente
 JOIN 
     ITENS_PEDIDO ON PEDIDO.ID_pedido = ITENS_PEDIDO.ID_pedido
-ORDER BY 
-    total_comprado DESC
-LIMIT 10;
+GROUP BY 
+    clientes.ID_cliente, 
+    clientes.nome_completo
+order by valor_medio_de_pedido desc;
 ```
-**produto mais pedido/vendido**
-dessa forma esta errada 
+***analisando valor médio de compra**
+
+**Estado que teve mais pedidos**
+
 
 ```sql
 SELECT 
-    Produtos.id_produto,
-    Produtos.nome_produto,
-    SUM(ITENS_PEDIDO.qtd) OVER (PARTITION BY Produtos.id_produto) AS produto_mais_pedido
-FROM 
-    Produtos  
+    e.estado,
+    SUM(ip.qtd) AS total_de_pedido
+FROM
+    endereco as e 
 JOIN 
-    ITENS_PEDIDO ON Produtos.id_produto = ITENS_PEDIDO.ID_produto 
-ORDER BY 
-    produto_mais_pedido DESC;
+    clientes as c ON e.id_cliente = c.id_cliente 
+JOIN 
+    PEDIDO as p ON c.id_cliente = p.id_cliente 
+JOIN 
+    ITENS_PEDIDO ip ON p.id_pedido = ip.id_pedido 
+GROUP BY  
+    e.estado;
 ```
 
-dessa forma esta certa
+**produto mais pedido/vendido**
 
 ```sql
 SELECT 
@@ -209,7 +158,7 @@ ORDER BY
 ```
 
 **Receita gerada para cada produto**
-pq usar o SUM??
+
 ```sql
 
 SELECT
@@ -225,19 +174,72 @@ GROUP BY
 ORDER BY
     Produtos.id_produto ;
 ```
+**frequencia de compra por produto**
+
+```sql
+SELECT
+    Produtos.id_produto,
+    Produtos.nome_produto,
+    COUNT(*) AS frequencia_de_compra
+FROM
+    Produtos
+JOIN
+    ITENS_PEDIDO ON Produtos.id_produto = ITENS_PEDIDO.id_produto
+GROUP BY
+    Produtos.id_produto, Produtos.nome_produto
+ORDER BY
+    frequencia_de_compra DESC;
+```
+**INTERVALO DE COMPRA POR CLIENTE**
 
 ```sql
 
+SELECT 
+	clientes.nome_completo,
+	clientes.id_cliente,
+	ABS(TIMESTAMPDIFF(MONTH, max(PEDIDO.data_pedido), MIN(PEDIDO.data_pedido))) as intervalo_em_meses_de_compra
+FROM
+	PEDIDO 
+JOIN
+	clientes on PEDIDO.id_cliente = clientes.id_cliente 
+GROUP BY 
+	clientes.id_cliente, clientes.nome_completo
+ORDER BY intervalo_em_meses_de_compra DESC ;
+```
+**FATURAMENTO DE 2023**
+
+```sql
+SELECT 
+	SUM(total) as faturamento_2023
+FROM
+	PEDIDO p 
+```
+**FATURAMENTO POR MES**
+
+```sql
+SELECT 
+    MONTH(data_pedido) AS mes,
+    YEAR(data_pedido) AS ano,
+    SUM(total) AS faturamento
+FROM 
+    PEDIDO
+GROUP BY 
+    MONTH(data_pedido), YEAR(data_pedido)
+ORDER BY 
+    ano, mes;
+   
+
+select * from PEDIDO p 
 ```
 
 ```sql
-
-```
-
-```sql
-
-```
-
-```sql
-
+SELECT 
+    EXTRACT(YEAR_MONTH FROM data_pedido) AS ano_mes,
+    SUM(total) AS faturamento
+FROM 
+    PEDIDO
+GROUP BY 
+    EXTRACT(YEAR_MONTH FROM data_pedido)
+ORDER BY 
+    ano_mes;
 ```
