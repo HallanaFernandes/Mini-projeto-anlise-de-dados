@@ -229,7 +229,7 @@ ORDER BY
     ano, mes;
    
 
-select * from PEDIDO p 
+
 ```
 
 ```sql
@@ -243,3 +243,58 @@ GROUP BY
 ORDER BY 
     ano_mes;
 ```
+
+**analisando o valor liquido e margem de contribuição**
+
+```sql
+SELECT
+    PEDIDO.ID_PEDIDO,
+    PEDIDO.TOTAL AS total_vendas,
+    custo_do_produto.custo_unitario AS custo_unitario_produto,
+    (PEDIDO.TOTAL - custo_do_produto.custo_unitario) AS lucro_liquido
+FROM
+    PEDIDO
+JOIN
+    ITENS_PEDIDO ON PEDIDO.ID_PEDIDO = ITENS_PEDIDO.id_pedido
+JOIN
+    custo_do_produto ON ITENS_PEDIDO.id_produto = custo_do_produto.id_produto;
+```
+
+```sql
+SELECT
+    PEDIDO.ID_PEDIDO,
+    PEDIDO.TOTAL AS total_vendas,
+    SUM(custo_do_produto.custo_unitario) AS custo_unitario_total,
+    (PEDIDO.TOTAL - SUM(custo_do_produto.custo_unitario)) AS lucro_liquido
+FROM
+    PEDIDO
+JOIN
+    ITENS_PEDIDO ON PEDIDO.ID_PEDIDO = ITENS_PEDIDO.id_pedido
+JOIN
+    custo_do_produto ON ITENS_PEDIDO.id_produto = custo_do_produto.id_produto
+GROUP BY
+    PEDIDO.ID_PEDIDO, PEDIDO.TOTAL;
+
+```
+
+```sql
+SELECT
+    SUM(lucro_liquido) AS lucro_liquido_total
+FROM (
+    SELECT
+        PEDIDO.ID_PEDIDO,
+        PEDIDO.TOTAL AS total_vendas,
+        SUM(custo_do_produto.custo_unitario) AS custo_unitario_total,
+        (PEDIDO.TOTAL - SUM(custo_do_produto.custo_unitario)) AS lucro_liquido
+    FROM
+        PEDIDO
+    JOIN
+        ITENS_PEDIDO ON PEDIDO.ID_PEDIDO = ITENS_PEDIDO.id_pedido
+    JOIN
+        custo_do_produto ON ITENS_PEDIDO.id_produto = custo_do_produto.id_produto
+    GROUP BY
+        PEDIDO.ID_PEDIDO, PEDIDO.TOTAL
+) AS lucro_por_pedido;
+
+```
+
