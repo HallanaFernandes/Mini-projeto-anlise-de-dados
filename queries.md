@@ -119,7 +119,6 @@ GROUP BY
     clientes.nome_completo
 order by valor_medio_de_pedido desc;
 ```
-***analisando valor médio de compra**
 
 **Estado que teve mais pedidos**
 
