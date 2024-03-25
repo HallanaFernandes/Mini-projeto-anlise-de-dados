@@ -58,7 +58,7 @@ CREATE TABLE endereco (
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );
 
--- Populando a tabela endereco com valores aleatórios
+
 INSERT INTO endereco (id_endereco, pais, estado, cidade, bairro, rua, numero, cep, id_cliente) VALUES
 (1, 'Brasil', 'São Paulo', 'São Paulo', 'Centro', 'Rua A', '123', '01000-000', 1),
 (2, 'Brasil', 'Rio de Janeiro', 'Rio de Janeiro', 'Copacabana', 'Rua B', '456', '02000-000', 2),
@@ -107,7 +107,7 @@ CREATE TABLE Produtos (
     descricao TEXT
 );
 
--- Inserindo 25 linhas de dados de exemplo
+
 INSERT INTO Produtos (ID_produto, QTD_em_estoque, valor_unitario, total, nome_produto, descricao)
 VALUES
     (1, 10, 100.00, 1000.00, 'Teclado', 'Teclado USB padrão'),
@@ -253,30 +253,7 @@ ADD idade INT;
 UPDATE clientes
 SET idade = ROUND(RAND() * 23 + 12, 0); -- Gera idades aleatórias entre 12 e 35 anos
 
--- colocando mais nomes de menino na tabela 
-UPDATE clientes
-SET nome_completo = CASE 
-                        WHEN id_cliente = 35 THEN 'Marcos Lima'
-                        WHEN id_cliente = 31 THEN 'Ramon Alves'
-                        WHEN id_cliente = 21 THEN 'Lucas Almeida'
-                        ELSE nome_completo
-                    END,
-    email = CASE 
-                WHEN id_cliente = 35 THEN 'marcos@example.com'
-                WHEN id_cliente = 31 THEN 'ramon@example.com'
-                WHEN id_cliente = 21 THEN 'lucas@example.com'
-                ELSE email
-            END
-WHERE id_cliente IN (21, 31, 35);
 
-
-INSERT INTO PEDIDO (id_pedido, total, id_cliente, data_pedido, status)
-VALUES 
-    (34, 35, 34, '2023-05-11', 'enviado'),
-    (34, 25, 34, '2023-11-07', 'enviado'),
-    (34, 20, 35, '2023-12-28', 'enviado'),
-    (35, 110, 35, '2023-12-29', 'enviado'),
-    (35, 150, 35, '2023-12-09', 'enviado');
 
 -- TABELA CUSTO DO PRODUTO
 
