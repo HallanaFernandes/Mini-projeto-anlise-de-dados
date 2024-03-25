@@ -1,6 +1,5 @@
-*ANALISANDO O PERFIL DOS CLIENTES*
 
-**sexo mais predomintante**
+**Consulta do sexo mais predomintante**
 
 ```sql
 SELECT 
@@ -20,7 +19,7 @@ SELECT
 FROM 
     clientes;
 ```
-**agrupando meus clientes por faixa etária**
+**Consulta de cliente por faixa etária**
 
 ```sql
 SELECT 
@@ -35,7 +34,7 @@ GROUP BY
     faixa_etária;
    
 ```
-**vendo o total de clientes por estado**
+**Consulta do total de clientes por estado**
 
 ```sql
 select estado, count(*) as total_cliente
@@ -44,9 +43,7 @@ group by estado
 order by total_cliente desc
 limit 10; 
 ```
-**Determinar o cliente mais ativo com base na quantidade de pedidos**
-
-ou seja o que efetuou maior quantidade de pedidos
+**Consulta para ver o cliente mais ativo com base na quantidade de pedidos**
 
 ```sql
 SELECT clientes.ID_cliente, clientes.nome_completo, SUM(ITENS_PEDIDO.QTD) AS total_de_pedido
@@ -58,7 +55,7 @@ ORDER BY total_de_pedido DESC
 LIMIT 8;
 
 ```
-**análisar o cliente que fez o pedido mais alto**
+**Consulta do cliente que fez o pedido mais alto**
 
 ```sql	
 SELECT 
@@ -78,7 +75,7 @@ ORDER BY
 	total_pedido DESC 
 LIMIT 3;
 ```
-**análisar o cliente que fez o pedido mais baixo**
+**Consulta do cliente que fez o pedido mais baixo**
 
 ```sql
 	
@@ -101,7 +98,7 @@ LIMIT 3;
 
 ```
 
-**análisando o valor médio de pedido**
+**Consulta do valor médio de pedido**
 
 ```sql
 SELECT 
@@ -120,7 +117,7 @@ GROUP BY
 order by valor_medio_de_pedido desc;
 ```
 
-**Estado que teve mais pedidos**
+**Consulta do estado que teve mais pedidos**
 
 
 ```sql
@@ -139,7 +136,7 @@ GROUP BY
     e.estado;
 ```
 
-**produto mais pedido/vendido**
+**Consulta do produto mais pedido/vendido**
 
 ```sql
 SELECT 
@@ -156,7 +153,7 @@ ORDER BY
     produto_mais_pedido DESC;
 ```
 
-**Receita gerada para cada produto**
+**Consulta da receita gerada para cada produto**
 
 ```sql
 
@@ -173,7 +170,7 @@ GROUP BY
 ORDER BY
     Produtos.id_produto ;
 ```
-**frequencia de compra por produto**
+**Consulta da frequencia de compra por produto**
 
 ```sql
 SELECT
@@ -189,7 +186,7 @@ GROUP BY
 ORDER BY
     frequencia_de_compra DESC;
 ```
-**INTERVALO DE COMPRA POR CLIENTE**
+**Consulta do intervalo de compra por cliente**
 
 ```sql
 
@@ -205,7 +202,7 @@ GROUP BY
 	clientes.id_cliente, clientes.nome_completo
 ORDER BY intervalo_em_meses_de_compra DESC ;
 ```
-**FATURAMENTO DE 2023**
+**Consulta do faturamento de 2023**
 
 ```sql
 SELECT 
@@ -213,7 +210,7 @@ SELECT
 FROM
 	PEDIDO p 
 ```
-**FATURAMENTO POR MES**
+**Consulta do faturamento por mês**
 
 ```sql
 SELECT 
@@ -226,38 +223,9 @@ GROUP BY
     MONTH(data_pedido), YEAR(data_pedido)
 ORDER BY 
     ano, mes;
-   
-
-
 ```
 
-```sql
-SELECT 
-    EXTRACT(YEAR_MONTH FROM data_pedido) AS ano_mes,
-    SUM(total) AS faturamento
-FROM 
-    PEDIDO
-GROUP BY 
-    EXTRACT(YEAR_MONTH FROM data_pedido)
-ORDER BY 
-    ano_mes;
-```
-
-**analisando o valor liquido e margem de contribuição**
-
-```sql
-SELECT
-    PEDIDO.ID_PEDIDO,
-    PEDIDO.TOTAL AS total_vendas,
-    custo_do_produto.custo_unitario AS custo_unitario_produto,
-    (PEDIDO.TOTAL - custo_do_produto.custo_unitario) AS lucro_liquido
-FROM
-    PEDIDO
-JOIN
-    ITENS_PEDIDO ON PEDIDO.ID_PEDIDO = ITENS_PEDIDO.id_pedido
-JOIN
-    custo_do_produto ON ITENS_PEDIDO.id_produto = custo_do_produto.id_produto;
-```
+**Consulta do valor liquido por pedido**
 
 ```sql
 SELECT
@@ -273,8 +241,10 @@ JOIN
     custo_do_produto ON ITENS_PEDIDO.id_produto = custo_do_produto.id_produto
 GROUP BY
     PEDIDO.ID_PEDIDO, PEDIDO.TOTAL;
-
 ```
+
+
+**Consulta do valor liquido total do ano de 2023**
 
 ```sql
 SELECT
