@@ -267,3 +267,5 @@ FROM (
 
 ```
 
+--- cliente por sexo
+--- faixa_etaria_clientes
