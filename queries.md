@@ -267,5 +267,5 @@ FROM (
 
 ```
 
---- cliente por sexo
---- faixa_etaria_clientes
+--- view clientes por sexo
+--- view_faixa_etaria_clientes
