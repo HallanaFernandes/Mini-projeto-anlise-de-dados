@@ -9,14 +9,14 @@ Neste mini projeto forem utilizados as ferramentas de SQL para criação de tabe
 
 ***links:***
 
-• [Criação de tabelas:]()
+• [Criação de tabelas:](https://github.com/HallanaFernandes/Mini-projeto-anlise-de-dados/blob/main/cria%C3%A7%C3%A3oTabelas.sql)
 
-• [Análises:]()
+• [Análises:](https://github.com/HallanaFernandes/Mini-projeto-anlise-de-dados/blob/main/an%C3%A1lises.md)
 
-• [Queries:]()
+• [Queries:](https://github.com/HallanaFernandes/Mini-projeto-anlise-de-dados/blob/main/queries.md)
 
-• [Diagrama de processos:]()
+• [Diagrama de processos:](https://github.com/HallanaFernandes/Mini-projeto-anlise-de-dados/blob/main/DIAGRAMA%20DE%20PROCESSOS.ods)
 
-• [Modelagem de dados:]()
+• [Modelagem de dados:](https://github.com/HallanaFernandes/Mini-projeto-anlise-de-dados/blob/main/modelagem%20de%20dados.pdf)
 
 
